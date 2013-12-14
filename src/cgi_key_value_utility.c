@@ -4,7 +4,6 @@
 #include<pwd.h>
 
 #include "cgi_key_value.h"
-#include "cgi_user_common.h"
 
 #define CGI_PASSWROD_DATE_LEN 128
 
