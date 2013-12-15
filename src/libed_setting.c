@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cgi_key_value.h"
+#include "libed_key_value.h"
 #include "cli_setting.h"
-#include "cgi_key_value_interface.h"
+#include "libed_key_value_interface.h"
 
 #define Y_OR_N "[y|n]"
 
@@ -44,7 +44,7 @@ enum CLI_TEST_PARAM_VALUE{TEST_PARAM_COUNT, TEST_PARAM_RETURN, TEST_PARAM_OUTPUT
 
 static char* cli_setting_read_output(char *path)
 {
-    CGI_VALUE_CHECK(path == NULL, NULL);
+    LIBED_VALUE_CHECK(path == NULL, NULL);
     char *buffer = NULL;
     char tmp_buffer[MAX_READ_BUFFER] = {0};
     char *tmp_string = NULL;
@@ -69,7 +69,7 @@ static char* cli_setting_read_output(char *path)
 
 int cli_setting_pre_check(char *name)
 {
-    int ret = CGI_ERROR_NONE;
+    int ret = LIBED_ERROR_NONE;
     char *output = NULL;
     char *temp_string = NULL;
     char *temp_name = NULL;
@@ -79,9 +79,9 @@ int cli_setting_pre_check(char *name)
     char value[CLI_TEST_COUNT_LEN];
     memset(value, 0, CLI_TEST_COUNT_LEN);
 
-    if(NULL == cgi_key_value_decoding(CLI_TEST_CONF_PATH))
+    if(NULL == libed_key_value_decoding(CLI_TEST_CONF_PATH))
     {
-        return CGI_ERROR_NONE;
+        return LIBED_ERROR_NONE;
     }
 
     //strrstr no exist
@@ -93,15 +93,15 @@ int cli_setting_pre_check(char *name)
     temp_name = &name[len+1];
     
     len = strlen(temp_name)+strlen(cli_setting_test_string[TEST_PARAM_COUNT])+1;
-    CGI_VALUE_MALLOC(key, len+1, char);
+    LIBED_VALUE_MALLOC(key, len+1, char);
     snprintf(key, len+1, "%s.%s", temp_name, cli_setting_test_string[TEST_PARAM_COUNT]);
-    if(temp_string = cgi_key_value_get(key))
+    if(temp_string = libed_key_value_get(key))
     {
         count = atoi(temp_string);
         if(count > 1)
         {
             sprintf(value, "%d", --count);
-            cgi_key_value_set(key, value);
+            libed_key_value_set(key, value);
         }
         else if(count == 1)
         {
@@ -111,18 +111,18 @@ int cli_setting_pre_check(char *name)
             len = strlen(temp_name)+strlen(cli_setting_test_string[TEST_PARAM_OUTPUT])+1;
             key = realloc(key, len+1);
             snprintf(key, len+1, "%s.%s", temp_name, cli_setting_test_string[TEST_PARAM_OUTPUT]);
-            output = cgi_key_value_get(key);
+            output = libed_key_value_get(key);
 #endif
             output = cli_setting_read_output(output);
             if(NULL != output)
             {
-                CGI_STDOUT("%s", output);
+                LIBED_STDOUT("%s", output);
             }
 
             len = strlen(temp_name)+strlen(cli_setting_test_string[TEST_PARAM_RETURN])+1;
             key = realloc(key, len+1);
             snprintf(key, len+1, "%s.%s", temp_name, cli_setting_test_string[TEST_PARAM_RETURN]);
-            if(temp_string = cgi_key_value_get(key))
+            if(temp_string = libed_key_value_get(key))
             {
                 ret = atoi(temp_string);
             }
@@ -130,37 +130,37 @@ int cli_setting_pre_check(char *name)
             if(ret != 0 || output)
             {
 #ifndef CLI_TEST_SINGLE_CMD
-                CGI_VALUE_FREE(output);
+                LIBED_VALUE_FREE(output);
 #endif
                 exit(ret);
             }
         }
         else
         {
-            ret = CGI_OPERATION_INTERPUT;
+            ret = LIBED_OPERATION_INTERPUT;
         }
     }
-    cgi_key_value_encoding(CLI_TEST_CONF_PATH, 1);
+    libed_key_value_encoding(CLI_TEST_CONF_PATH, 1);
     return ret;
 }
 
 int cli_setting_auto_reply_set(struct cli_setting_t *setting)
 {
     char ch = 0;
-    int ret = CGI_ERROR_NONE;
-    CGI_VALUE_CHECK(NULL == setting, CGI_OPERATION_FAILED);
+    int ret = LIBED_ERROR_NONE;
+    LIBED_VALUE_CHECK(NULL == setting, LIBED_OPERATION_FAILED);
 
     if(!setting->quite)
     {
-        CGI_STDOUT("%s%s%s", cli_setting_reference[CONTINUE], Y_OR_N, " : ");
+        LIBED_STDOUT("%s%s%s", cli_setting_reference[CONTINUE], Y_OR_N, " : ");
         if(setting->y_or_n == CLI_Y)
         {
-            CGI_STDOUT("y\n");
+            LIBED_STDOUT("y\n");
             ch = 'y';
         }
         else if(setting->y_or_n == CLI_N)
         {
-            CGI_STDOUT("n\n");
+            LIBED_STDOUT("n\n");
             ch = 'n';
         }
         else
@@ -181,21 +181,21 @@ int cli_setting_auto_reply_set(struct cli_setting_t *setting)
     }
     else 
     {
-        ret = CGI_INVALID_PARAM;
+        ret = LIBED_INVALID_PARAM;
     }
 
     switch(ch)
     {
         case 'y':
         case 'Y':
-            ret = CGI_ERROR_NONE;
+            ret = LIBED_ERROR_NONE;
             break;
         case 'n':
         case 'N':
-            ret = CGI_OPERATION_FAILED;
+            ret = LIBED_OPERATION_FAILED;
             break;
         default:
-            ret = CGI_ERROR_NONE;
+            ret = LIBED_ERROR_NONE;
             break;
     }
 
