@@ -3,11 +3,11 @@
 #include<string.h>
 #include<pwd.h>
 
-#include "cgi_key_value.h"
+#include "libed_key_value.h"
 
-#define CGI_PASSWROD_DATE_LEN 128
+#define CLIED_PASSWROD_DATE_LEN 128
 
-void cgi_trace(char *format, ...)
+void libed_trace(char *format, ...)
 {
     char trace_buffer[MAX_READ_BUFFER] = {0}; 
     va_list arg_ptr; 
@@ -18,7 +18,7 @@ void cgi_trace(char *format, ...)
 }
 
 /* remove space in the front */
-int cgi_ltrim(char *string)
+int libed_ltrim(char *string)
 {
     if(NULL == string || (!strlen(string)))
     {
@@ -31,7 +31,7 @@ int cgi_ltrim(char *string)
     {
         space_num++;
     }
-    while(string[space_num] != '\0' && string[space_num] != CGI_KEY_VALUE_SEPRATOR)
+    while(string[space_num] != '\0' && string[space_num] != CLIED_KEY_VALUE_SEPRATOR)
     {
         string[index++] = string[space_num++];
     }
@@ -40,7 +40,7 @@ int cgi_ltrim(char *string)
 }
 
 /* remove space tail */
-int cgi_rtrim(char *string)
+int libed_rtrim(char *string)
 {
     if(NULL == string || (!strlen(string)))
     {
@@ -57,7 +57,7 @@ int cgi_rtrim(char *string)
     return len;
 }
 
-void cgi_strupr(char *string, int len)
+void libed_strupr(char *string, int len)
 {
     int index = 0;
     for(; index < len; ++index)
@@ -66,7 +66,7 @@ void cgi_strupr(char *string, int len)
     }
 }
 
-int cgi_blockhead(char *string)
+int libed_blockhead(char *string)
 {
     if(NULL == string || (!strlen(string)))
     {
@@ -75,17 +75,17 @@ int cgi_blockhead(char *string)
     string[0] -= 32;
 }
 
-void cgi_input_print(int argc, char **argv)
+void libed_input_print(int argc, char **argv)
 {
     int index = 0;
     for(; index < argc; ++index)
     {
-        CGI_STDOUT("%s ", argv[index]);
+        CLIED_STDOUT("%s ", argv[index]);
     }
-    CGI_STDOUT("\n");
+    CLIED_STDOUT("\n");
 }
 
-char *cgi_get_current_user()
+char *libed_get_current_user()
 {
     char *username = NULL;
     username = getenv("BUI_USER");
@@ -98,96 +98,96 @@ char *cgi_get_current_user()
     return username;
 }
 
-int cgi_utility_check_date(char *date)
+int libed_utility_check_date(char *date)
 {
-    CGI_VALUE_CHECK(NULL == date, CGI_INVALID_PARAM);
+    CLIED_VALUE_CHECK(NULL == date, CLIED_INVALID_PARAM);
     int ret = 0;
-    char year[CGI_PASSWROD_DATE_LEN] = {0};
-    char month[CGI_PASSWROD_DATE_LEN] = {0};
-    char day[CGI_PASSWROD_DATE_LEN] = {0};
+    char year[CLIED_PASSWROD_DATE_LEN] = {0};
+    char month[CLIED_PASSWROD_DATE_LEN] = {0};
+    char day[CLIED_PASSWROD_DATE_LEN] = {0};
 
     if(0 == strcmp(date, "Never"))
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
     ret = sscanf(date, "%2s/%2s/%2s", month, day, year);
     if(month[0] != '\0' && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
     
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%4s-%2s-%2s", year, month, day);
     if(month[0] != '\0' && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
     
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%2s-%2s-%2s", year, month, day);
     if(month[0] != '\0' && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
     
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%2s-%3s-%2s", day, month, year);
     if(month[0] != '\0' && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
 
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%2s-%3s-%4s", day, month, year);
     if(month[0] != '\0' && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
 
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%2s %3s %2s", day, month, year);
     if(strlen(month) == 3 && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
 
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%2s %3s %4s", day, month, year);
     if(strlen(month) == 3 && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%3s %2s, %4s", month, day, year);
     if(strlen(month) == 3 && day[0] != '\0' && strlen(year) == 4)
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
     
-    memset(year, 0, CGI_PASSWROD_DATE_LEN);
-    memset(month, 0, CGI_PASSWROD_DATE_LEN);
-    memset(day, 0, CGI_PASSWROD_DATE_LEN);
+    memset(year, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(month, 0, CLIED_PASSWROD_DATE_LEN);
+    memset(day, 0, CLIED_PASSWROD_DATE_LEN);
     ret = sscanf(date, "%3s %2s, %2s", month, day, year);
     if(strlen(month) == 3 && day[0] != '\0' && year[0] != '\0')
     {
-        return CGI_ERROR_NONE;
+        return CLIED_ERROR_NONE;
     }
 
-    return CGI_INVALID_PARAM;
+    return CLIED_INVALID_PARAM;
 }
 
 
